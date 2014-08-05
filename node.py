@@ -33,6 +33,7 @@ def getmyip():
    
 homeip=getmyip()
 
+
 def hashvector(hashid):
     global lastin
     lastin=hashid
@@ -49,8 +50,8 @@ def hashvector(hashid):
     else:
         v=[99]*vectorlength
     return v
-    
-            
+
+
 def nodedistance(nodeavector,nodebvector):
     d=0
     if len(nodeavector)==len(nodebvector):
@@ -85,11 +86,11 @@ class node:
             self.hashvector[r]=int(inth%elementlength)
             inth=inth/elementlength
             r=r+1
+
         self.sockets=[0]*(max_neighbors+1) #first socket should be SERVER socket
 
         #listening socket
         self.sockets[0]=self.create_socket('',self.listeningport)
-        #self.create_socket('',listeningport,0)
   
 
     def create_socket(self, HOST, PORT):    #RETURNS SOCKET OBJECT
@@ -164,7 +165,7 @@ class node:
                 a['body'].append(x)
         return a
 
-    def client_thread(self, connection):  #Whatever this node does as a SERVER
+    def client_thread(self, connection, actionlogic, *args):  #Whatever this node does as a SERVER
         #while True:
         global data, reply
         data=connection.recv(1024)
@@ -177,14 +178,10 @@ class node:
 
         if isinstance(data,str):
             data=ast.literal_eval(data)
-        reply=''
-        #RECEIVING DATA LOGIC
-        if len(data)>1:
-            if data['header']=='neighbors':
-               self.adjust_neighbors(data['body'])
+
+        reply=actionlogic(data)
          
         
-        reply=str(self.neighbor_info_message())
         print "SERVER REPLYING with "
         print ''
         print reply
@@ -222,7 +219,8 @@ class node:
             
             connection,address=self.sockets[0].accept()
             print j
-            k=threading.Thread(target=self.client_thread,args=(connection,))
+            
+            k=threading.Thread(target=self.client_thread,args=(connection,self.reply,))
             k.daemon=True
             k.start()
             #self.client_thread(connection)
@@ -257,7 +255,6 @@ class node:
         print "I am online"
         self.logs=self.logs+'\n\nI went online\n'
 
-        
         r=threading.Thread(target=self.chat)
                            
         r.daemon=True
@@ -265,6 +262,17 @@ class node:
 
     def log(self):
         print self.logs
+
+    def reply(self,args):
+        t=time.time()
+        interval=5
+        ok=True
+        while ok:
+            if time.time()>=t+interval:
+                ok=False
+                return str(self.neighbor_info_message())
+            
+        
 
 
 
@@ -277,7 +285,7 @@ a.neighbors[0]=[b.hashid,homeip,b.listeningport]
 b.neighbors[0]=[a.hashid,homeip,a.listeningport]
 c.neighbors[0]=[b.hashid,homeip,b.listeningport]
 a.online()
-#b.online()
+b.online()
 #c.online()
 
 
