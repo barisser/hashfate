@@ -67,7 +67,6 @@ def nodedistance(nodeavector,nodebvector):
         return -1
 
 
-
 class node:
 
     def __init__(self, listeningport):
@@ -129,6 +128,8 @@ class node:
         for y in neighbordata:
             if y[0]>-1:
                 nd.append(nodedistance(hashvector(y[0]),self.hashvector))
+            else:
+                nd.append(999999)
         a=0
         farthest=0
         farthestid=-1
@@ -142,6 +143,7 @@ class node:
 
     def adjust_neighbors(self, newneighbordata):
         print "ADJUSTING NEIGHBORS"
+        newneighbordata=newneighbordata['body']
         ok=True
         while ok:
             a=self.closest_neighbor(newneighbordata)
@@ -153,6 +155,8 @@ class node:
                 ok=False
             else:
                 self.neighbors[b]=newneighbordata[a]
+                ok=False
+                self.logs=self.logs+"\nI changed my neighbors"
             
 
     def neighbor_info_message(self):
@@ -178,7 +182,8 @@ class node:
 
         if isinstance(data,str):
             data=ast.literal_eval(data)
-
+        global data
+        print "DATA HERE: "+str(data)
         reply=actionlogic(data)
          
         
@@ -264,6 +269,8 @@ class node:
         print self.logs
 
     def reply(self,args):
+
+        self.adjust_neighbors(args)
         t=time.time()
         interval=5
         ok=True
@@ -286,6 +293,6 @@ b.neighbors[0]=[a.hashid,homeip,a.listeningport]
 c.neighbors[0]=[b.hashid,homeip,b.listeningport]
 a.online()
 b.online()
-#c.online()
+c.online()
 
 
