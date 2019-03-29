@@ -9,7 +9,7 @@ def hashvector(hashid):
     v=[0]*vectorlength
     print hashid
     if hashid>-1:
-        inth=int(hashid,16)
+        inth=int(hashid, 16)
         while inth>0:
             v[r]=int(inth%elementlength)
             inth=inth/elementlength
@@ -19,7 +19,7 @@ def hashvector(hashid):
     return v
 
 
-def nodedistance(nodeavector,nodebvector):
+def nodedistance(nodeavector, nodebvector):
     d=0
     if len(nodeavector)==len(nodebvector):
         a=0
@@ -28,7 +28,7 @@ def nodedistance(nodeavector,nodebvector):
 
             a=a+1
         #print d
-        d=math.pow(float(d),0.5)
+        d=math.pow(float(d), 0.5)
         return d
     else:
         return -1
