@@ -32,5 +32,3 @@ def nodedistance(nodeavector,nodebvector):
         return d
     else:
         return -1
-
-
