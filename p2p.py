@@ -29,7 +29,7 @@ class node:
         self.neighbors=[[-1,'',8888]]*max_neighbors   #list of 2 element arrays of HASHID, IP ADDRESS, AND THEIR PORT
         self.ip=homeip
         self.logs=''
-        
+
         r=0
         while inth>0:
             self.hashvector[r]=int(inth%elementlength)
@@ -40,4 +40,4 @@ class node:
         #listening socket
         self.sockets[0]=self.create_socket('',self.listeningport)
         #self.create_socket('',listeningport,0)
-  
+
