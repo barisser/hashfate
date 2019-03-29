@@ -21,9 +21,11 @@ timelistening=100
 
 active=True
 
+
 def now():
     a=datetime.fromtimestamp(time.time())
     return a.strftime("%H:%M:%S %Y-%m-%d")
+
 
 def getmyip():
     a=requests.get('http://checkip.dyndns.org')
