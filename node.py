@@ -42,7 +42,7 @@ def hashvector(hashid):
     v=[0]*vectorlength
     print hashid
     if hashid>-1:
-        inth=int(hashid,16)
+        inth=int(hashid, 16)
         while inth>0:
             v[r]=int(inth%elementlength)
             inth=inth/elementlength
@@ -52,7 +52,7 @@ def hashvector(hashid):
     return v
 
 
-def nodedistance(nodeavector,nodebvector):
+def nodedistance(nodeavector, nodebvector):
     d=0
     if len(nodeavector)==len(nodebvector):
         a=0
@@ -61,7 +61,7 @@ def nodedistance(nodeavector,nodebvector):
 
             a=a+1
         #print d
-        d=math.pow(float(d),0.5)
+        d=math.pow(float(d), 0.5)
         return d
     else:
         return -1
@@ -74,9 +74,9 @@ class node:
         self.listeningport=listeningport
         self.timestamp=timestamp
         self.hashid=hashlib.sha256(str(timestamp+random.random()*1000000)).hexdigest()
-        inth=int(self.hashid,16)
+        inth=int(self.hashid, 16)
         self.hashvector=[0]*vectorlength
-        self.neighbors=[[-1,'',8888]]*max_neighbors   #list of 2 element arrays of HASHID, IP ADDRESS, AND THEIR PORT
+        self.neighbors=[[-1, '', 8888]]*max_neighbors   #list of 2 element arrays of HASHID, IP ADDRESS, AND THEIR PORT
         self.ip=homeip
         self.logs=''
         
@@ -89,7 +89,7 @@ class node:
         self.sockets=[0]*(max_neighbors+1) #first socket should be SERVER socket
 
         #listening socket
-        self.sockets[0]=self.create_socket('',self.listeningport)
+        self.sockets[0]=self.create_socket('', self.listeningport)
   
 
     def create_socket(self, HOST, PORT):    #RETURNS SOCKET OBJECT
@@ -106,11 +106,11 @@ class node:
             print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
 
 
-    def closest_neighbor(self,newneighbordata):
+    def closest_neighbor(self, newneighbordata):
         nd=[]
         for y in newneighbordata:
             if y[0]>-1:
-                nd.append(nodedistance(hashvector(y[0]),self.hashvector))
+                nd.append(nodedistance(hashvector(y[0]), self.hashvector))
         a=0
         closest=9999999999999999
         closestid=-1
@@ -122,12 +122,12 @@ class node:
 
         return closestid
 
-    def farthest_neighbor(self,neighbordata):
+    def farthest_neighbor(self, neighbordata):
         global nd
         nd=[]
         for y in neighbordata:
             if y[0]>-1:
-                nd.append(nodedistance(hashvector(y[0]),self.hashvector))
+                nd.append(nodedistance(hashvector(y[0]), self.hashvector))
             else:
                 nd.append(999999)
         a=0
@@ -149,8 +149,8 @@ class node:
             a=self.closest_neighbor(newneighbordata)
             b=self.farthest_neighbor(self.neighbors)
             
-            nda=nodedistance(hashvector(newneighbordata[0][0]),self.hashvector)
-            ndb=nodedistance(hashvector(self.neighbors[b][0]),self.hashvector)
+            nda=nodedistance(hashvector(newneighbordata[0][0]), self.hashvector)
+            ndb=nodedistance(hashvector(self.neighbors[b][0]), self.hashvector)
             if nda>=ndb:
                 ok=False
             else:
@@ -180,7 +180,7 @@ class node:
         print ''
         self.logs=self.logs+'\n\nI heard a message at '+str(now())+':\n'+str(data)+'n'
 
-        if isinstance(data,str):
+        if isinstance(data, str):
             data=ast.literal_eval(data)
         global data
         print "DATA HERE: "+str(data)
@@ -222,10 +222,10 @@ class node:
         while active:
             j=j+1
             
-            connection,address=self.sockets[0].accept()
+            connection, address=self.sockets[0].accept()
             print j
             
-            k=threading.Thread(target=self.client_thread,args=(connection,self.reply,))
+            k=threading.Thread(target=self.client_thread, args=(connection, self.reply,))
             k.daemon=True
             k.start()
             #self.client_thread(connection)
@@ -243,7 +243,7 @@ class node:
                 h=x[1]
                 p=x[2]
                 #a=threading.Thread(target=self.message,args=(h,p,m,))
-                self.message(h,p,m)
+                self.message(h, p, m)
         
 
     def online(self):
@@ -268,7 +268,7 @@ class node:
     def log(self):
         print self.logs
 
-    def reply(self,args):
+    def reply(self, args):
 
         self.adjust_neighbors(args)
         t=time.time()
@@ -288,9 +288,9 @@ a=node(p)
 b=node(p+1)
 c=node(p+2)
 
-a.neighbors[0]=[b.hashid,homeip,b.listeningport]
-b.neighbors[0]=[a.hashid,homeip,a.listeningport]
-c.neighbors[0]=[b.hashid,homeip,b.listeningport]
+a.neighbors[0]=[b.hashid, homeip, b.listeningport]
+b.neighbors[0]=[a.hashid, homeip, a.listeningport]
+c.neighbors[0]=[b.hashid, homeip, b.listeningport]
 a.online()
 b.online()
 c.online()
