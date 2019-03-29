@@ -1,6 +1,7 @@
 import node
 import math
 
+
 def hashvector(hashid):
     global lastin
     lastin=hashid
