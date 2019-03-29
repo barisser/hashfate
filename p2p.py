@@ -40,4 +40,3 @@ class node:
         #listening socket
         self.sockets[0]=self.create_socket('',self.listeningport)
         #self.create_socket('',listeningport,0)
-  
