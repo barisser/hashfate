@@ -294,5 +294,3 @@ c.neighbors[0]=[b.hashid,homeip,b.listeningport]
 a.online()
 b.online()
 c.online()
-
-
