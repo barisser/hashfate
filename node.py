@@ -30,7 +30,7 @@ def getmyip():
     a=a.content
     b=a[76:89]
     return b
-   
+
 homeip=getmyip()
 
 
@@ -79,7 +79,7 @@ class node:
         self.neighbors=[[-1,'',8888]]*max_neighbors   #list of 2 element arrays of HASHID, IP ADDRESS, AND THEIR PORT
         self.ip=homeip
         self.logs=''
-        
+
         r=0
         while inth>0:
             self.hashvector[r]=int(inth%elementlength)
@@ -90,7 +90,7 @@ class node:
 
         #listening socket
         self.sockets[0]=self.create_socket('',self.listeningport)
-  
+
 
     def create_socket(self, HOST, PORT):    #RETURNS SOCKET OBJECT
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -148,7 +148,7 @@ class node:
         while ok:
             a=self.closest_neighbor(newneighbordata)
             b=self.farthest_neighbor(self.neighbors)
-            
+
             nda=nodedistance(hashvector(newneighbordata[0][0]),self.hashvector)
             ndb=nodedistance(hashvector(self.neighbors[b][0]),self.hashvector)
             if nda>=ndb:
@@ -157,7 +157,7 @@ class node:
                 self.neighbors[b]=newneighbordata[a]
                 ok=False
                 self.logs=self.logs+"\nI changed my neighbors"
-            
+
 
     def neighbor_info_message(self):
         a={}
@@ -185,8 +185,8 @@ class node:
         global data
         print "DATA HERE: "+str(data)
         reply=actionlogic(data)
-         
-        
+
+
         print "SERVER REPLYING with "
         print ''
         print reply
@@ -197,7 +197,7 @@ class node:
         #print "here\n"
 
     def message(self, host, port, message): 
-        
+
         remote_ip=socket.gethostbyname(host)
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -210,7 +210,7 @@ class node:
         print ''
         self.logs=self.logs+'\n\nI initiated a message saying: \n'+str(message)
         reply = s.recv(4096)
-             
+
         print "REPLY RECEIVED:"
         print ''
         print reply
@@ -221,10 +221,10 @@ class node:
         j=0
         while active:
             j=j+1
-            
+
             connection,address=self.sockets[0].accept()
             print j
-            
+
             k=threading.Thread(target=self.client_thread,args=(connection,self.reply,))
             k.daemon=True
             k.start()
@@ -232,7 +232,7 @@ class node:
             print "Connected with "+str(address[0])+":"+str(address[1])
             print ''
             self.logs=self.logs+'\nThis node contacted me: '+str(address[0])+':'+str(address[1])
-            
+
     def chat(self):
         for x in self.neighbors:
             if x[0]>-1:
@@ -244,16 +244,16 @@ class node:
                 p=x[2]
                 #a=threading.Thread(target=self.message,args=(h,p,m,))
                 self.message(h,p,m)
-        
+
 
     def online(self):
-        
+
         #SETUP A REPLYING SERVER
         self.sockets[0].listen(max_neighbors)
         print 'Socket now listening'
         self.logs=self.logs+'\n\nI started listening\n'
         active=True
-        
+
         g=threading.Thread(target=self.serve)
         g.daemon=True
         g.start()
@@ -261,7 +261,7 @@ class node:
         self.logs=self.logs+'\n\nI went online\n'
 
         r=threading.Thread(target=self.chat)
-                           
+
         r.daemon=True
         r.start()
 
@@ -278,8 +278,8 @@ class node:
             if time.time()>=t+interval:
                 ok=False
                 return str(self.neighbor_info_message())
-            
-        
+
+
 
 
 
